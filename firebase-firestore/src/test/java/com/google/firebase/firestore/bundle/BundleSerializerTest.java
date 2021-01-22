@@ -623,10 +623,12 @@ public class BundleSerializerTest {
             + "id: 'bundle-1',\n"
             + "version: 1,\n"
             + "createTime: { seconds: 2, nanos: 3 }\n"
+            + "totalDocuments: 4,\n"
+            + "totalBytes: 5,\n"
             + "}";
     BundleMetadata expectedMetadata =
         new BundleMetadata(
-            "bundle-1", 1, new SnapshotVersion(new com.google.firebase.Timestamp(2, 3)));
+            "bundle-1", 1, new SnapshotVersion(new com.google.firebase.Timestamp(2, 3)), 4, 5);
     BundleMetadata actualMetadata = serializer.decodeBundleMetadata(new JSONObject(json));
     assertEquals(expectedMetadata, actualMetadata);
   }

@@ -51,7 +51,7 @@ public class BundleReaderTest {
   private static final BundleSerializer SERIALIZER =
       new BundleSerializer(new RemoteSerializer(TEST_PROJECT));
   public static final BundleMetadata BUNDLE_METADATA =
-      new BundleMetadata("bundle-1", 1, version(6000000L));
+      new BundleMetadata("bundle-1", 1, version(6000000L), 1, 1);
   public static final NamedQuery LIMIT_QUERY =
       new NamedQuery(
           "limitQuery",
@@ -303,7 +303,7 @@ public class BundleReaderTest {
             SERIALIZER, new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8)));
 
     BundleMetadata expectedMetadata =
-        new BundleMetadata("bundle-" + longString, 1, version(6000000L));
+        new BundleMetadata("bundle-" + longString, 1, version(6000000L), 1, 1);
     BundleMetadata actualMetadata = bundleReader.getBundleMetadata();
     assertEquals(expectedMetadata, actualMetadata);
   }
@@ -320,7 +320,7 @@ public class BundleReaderTest {
             SERIALIZER, new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8)));
 
     BundleMetadata expectedMetadata =
-        new BundleMetadata("bundle-\uD83D\uDE0A", 1, version(6000000L));
+        new BundleMetadata("bundle-\uD83D\uDE0A", 1, version(6000000L), 1, 1);
     BundleMetadata actualMetadata = bundleReader.getBundleMetadata();
     assertEquals(expectedMetadata, actualMetadata);
   }

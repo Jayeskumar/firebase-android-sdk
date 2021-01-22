@@ -15,6 +15,7 @@
 package com.google.firebase.firestore.bundle;
 
 import androidx.annotation.Nullable;
+import com.google.firebase.firestore.util.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -55,8 +56,7 @@ public class BundleReader {
     }
     BundleElement element = readNextElement();
     if (!(element instanceof BundleMetadata)) {
-      throw new IllegalArgumentException(
-          "Expected first element in bundle to be a metadata object");
+      raiseError("Expected first element in bundle to be a metadata object");
     }
     metadata = (BundleMetadata) element;
     // We don't consider the metadata as part ot the bundle size, as it used to encode the size of
@@ -196,13 +196,22 @@ public class BundleReader {
     JSONObject object = new JSONObject(json);
 
     if (object.has("metadata")) {
-      return serializer.decodeBundleMetadata(object.getJSONObject("metadata"));
+      BundleMetadata metadata = serializer.decodeBundleMetadata(object.getJSONObject("metadata"));
+      Logger.debug("BundleElement", "BundleMetadata element loaded");
+      return metadata;
     } else if (object.has("namedQuery")) {
-      return serializer.decodeNamedQuery(object.getJSONObject("namedQuery"));
+      NamedQuery namedQuery = serializer.decodeNamedQuery(object.getJSONObject("namedQuery"));
+      Logger.debug("BundleElement", "Query loaded: " + namedQuery.getName());
+      return namedQuery;
     } else if (object.has("documentMetadata")) {
-      return serializer.decodeBundledDocumentMetadata(object.getJSONObject("documentMetadata"));
+      BundledDocumentMetadata documentMetadata =
+          serializer.decodeBundledDocumentMetadata(object.getJSONObject("documentMetadata"));
+      Logger.debug("BundleElement", "Document metadata loaded: " + documentMetadata.getKey());
+      return documentMetadata;
     } else if (object.has("document")) {
-      return serializer.decodeDocument(object.getJSONObject("document"));
+      BundleDocument document = serializer.decodeDocument(object.getJSONObject("document"));
+      Logger.debug("BundleElement", "Document loaded: " + document.getKey());
+      return document;
     } else {
       throw new IllegalArgumentException("Cannot decode unknown Bundle element: " + json);
     }

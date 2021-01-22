@@ -45,7 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /** A JSON serializer to deserialize Firestore Bundles. */
-class BundleSerializer {
+public class BundleSerializer {
 
   private final RemoteSerializer remoteSerializer;
 
@@ -64,7 +64,9 @@ class BundleSerializer {
     String bundleId = bundleMetadata.getString("id");
     int version = bundleMetadata.getInt("version");
     SnapshotVersion createTime = decodeSnapshotVersion(bundleMetadata.getJSONObject("createTime"));
-    return new BundleMetadata(bundleId, version, createTime);
+    int totalDocuments = bundleMetadata.getInt("totalDocuments");
+    long totalBytes = bundleMetadata.getLong("totalBytes");
+    return new BundleMetadata(bundleId, version, createTime, totalDocuments, totalBytes);
   }
 
   public BundledDocumentMetadata decodeBundledDocumentMetadata(JSONObject bundledDocumentMetadata)
